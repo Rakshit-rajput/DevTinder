@@ -40,23 +40,29 @@ app.post("/signUp", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { emailId, password } = req.body;
+
+    // Find user by email
     const user = await User.findOne({ emailId: emailId });
     if (!user) {
-      res.status(404).send("Invalid credentials");
+      return res.status(404).send("Invalid credentials"); // Return to stop further execution
     }
-    const isPassword = await bcrypt.compare(password, user.password);
+
+    // Compare passwords
+    const isPassword = await user.validatePassword(password);
     if (isPassword) {
-      //creating jwt
-      const token = await jwt.sign({ _id: user._id }, "DEV@secretKey");
+      // Generate JWT token
+      const token = await user.getJWT();
+
+      // Set token in cookies
       res.cookie("token", token);
 
-      //add the token to the cookie and send the response back to the user
-      res.send("Login Succesful");
+      // Send success response
+      return res.send("Login Successful");
     } else {
       throw new Error("Invalid Credentials");
     }
   } catch (error) {
-    res.status(500).send("something went wrong" + error);
+    res.status(500).send("Something went wrong: " + error.message);
   }
 });
 app.get("/profile", userAuth, async (req, res) => {
@@ -132,6 +138,13 @@ app.patch("/updateUser", async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     res.status(500).send("something went wrong");
+  }
+});
+app.post("/sendConnectionReq", userAuth, (req, res) => {
+  try {
+    res.send("Connection req sent");
+  } catch (error) {
+    res.send(error);
   }
 });
 

@@ -1,5 +1,7 @@
 const { type } = require("express/lib/response");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -29,5 +31,19 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+userSchema.methods.getJWT = function () {
+  const user = this;
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+  return token;
+};
+userSchema.method.validatePassword = async function (passwordInputbyUser) {
+  const user = this;
+  const passwordHash = user.password;
+  const isPasswordValid = await bcrypt.compare(
+    passwordInputbyUser,
+    passwordHash
+  );
+  return isPasswordValid;
+};
 const User = mongoose.model("User", userSchema);
 module.exports = mongoose.model("User", userSchema);
