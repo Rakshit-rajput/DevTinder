@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/authRoutes");
 const profileRouter = require("./routes/profileRoutes");
 const requestRouter = require("./routes/requestsRouter");
+const userRouter = require("./routes/userRouter");
 //middlewares
 app.use(express.json());
 app.use(cookieParser());
@@ -17,6 +18,7 @@ const PORT = 3000;
 app.use("/auth", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
+app.use("/", userRouter);
 
 // Start the server
 

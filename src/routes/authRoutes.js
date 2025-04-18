@@ -19,7 +19,7 @@ authRouter.post("/signUp", async (req, res) => {
       password: passwordHash,
     });
     await user.save();
-    res.status(200).send("User added succesfully" + passwordHash);
+    res.status(200).send("User added successfully" + passwordHash);
   } catch (error) {
     res.status(400).send("ERROR:" + error.message);
   }
@@ -55,5 +55,8 @@ authRouter.post("/login", async (req, res) => {
 authRouter.post("/logout", (req, res) => {
   res.clearCookie("token");
   res.send("Logout successful");
+});
+authRouter.post("/forgetPassword", async (req, res) => {
+  res.send("Password reset");
 });
 module.exports = authRouter;

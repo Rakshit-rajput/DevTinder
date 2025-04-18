@@ -8,14 +8,19 @@ const userSchema = new mongoose.Schema(
     firstName: {
       type: String,
       required: true,
+      minLength: 4,
+      maxLength: 50,
     },
     lastName: {
       type: String,
+      minLength: 4,
+      maxLength: 50,
     },
     emailId: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
     password: {
       type: String,
@@ -25,6 +30,13 @@ const userSchema = new mongoose.Schema(
       type: Number,
     },
     gender: {
+      type: String,
+    },
+    skills: {
+      type: [String],
+      default: [],
+    },
+    about: {
       type: String,
     },
   },
