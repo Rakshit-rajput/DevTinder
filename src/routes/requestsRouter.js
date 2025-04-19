@@ -23,7 +23,7 @@ requestRouter.post("/request/:status/:touserId", userAuth, async (req, res) => {
 
     const isToUserPresent = await User.findById(toUserId);
     if (!isToUserPresent) {
-      res.status(400).json({ message: "User does not exists" });
+      return res.status(400).json({ message: "User does not exists" });
     }
     //if there is already connection request present
     const existingConnectionRequest = await ConnectionRequestModel.findOne({
@@ -104,7 +104,8 @@ requestRouter.post(
   async (req, res) => {
     try {
       const loggedInUser = req.user;
-      const { status, requestId } = req.params;
+      const requestId = req.params.requestId;
+      const status = req.params.status;
 
       const allowedStatus = ["accepted", "rejected"];
       if (!allowedStatus.includes(status)) {
@@ -112,7 +113,7 @@ requestRouter.post(
       }
 
       const connectionRequest = await ConnectionRequestModel.findOne({
-        _id: requestId,
+        fromUserId: requestId,
         toUserId: loggedInUser._id,
         status: "interested",
       });
