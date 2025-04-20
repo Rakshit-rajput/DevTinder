@@ -8,7 +8,14 @@ const authRouter = require("./routes/authRoutes");
 const profileRouter = require("./routes/profileRoutes");
 const requestRouter = require("./routes/requestsRouter");
 const userRouter = require("./routes/userRouter");
+const cors = require("cors");
 //middlewares
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 // Define a port
