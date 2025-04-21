@@ -5,23 +5,26 @@ const bcrypt = require("bcrypt");
 const { validateStringData } = require("../utils/validate");
 authRouter.post("/signUp", async (req, res) => {
   try {
-    //validate the data
     validateStringData(req);
     const { firstName, lastName, emailId, password } = req.body;
-    //encrypting the password before saving it to db
+
     const passwordHash = await bcrypt.hash(password, 10);
-    console.log(passwordHash);
-    //signing up user
     const user = new User({
       firstName,
       lastName,
       emailId,
       password: passwordHash,
     });
+
     await user.save();
-    res.status(200).send("User added successfully" + passwordHash);
+
+    // Generate JWT token
+    const token = await user.getJWT();
+    res.cookie("token", token);
+
+    res.status(200).send({ message: "User added successfully", user });
   } catch (error) {
-    res.status(400).send("ERROR:" + error.message);
+    res.status(400).send("ERROR: " + error.message);
   }
 });
 authRouter.post("/login", async (req, res) => {
@@ -44,7 +47,7 @@ authRouter.post("/login", async (req, res) => {
       res.cookie("token", token);
 
       // Send success response
-      return res.send("Login Successful");
+      return res.send(user);
     } else {
       throw new Error("Invalid Credentials");
     }
@@ -53,8 +56,10 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 authRouter.post("/logout", (req, res) => {
-  res.clearCookie("token");
-  res.send("Logout successful");
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+  });
+  res.send("Logout Successful!!");
 });
 authRouter.post("/forgetPassword", async (req, res) => {
   res.send("Password reset");
