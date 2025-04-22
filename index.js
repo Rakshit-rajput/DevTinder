@@ -2,12 +2,12 @@
 const express = require("express");
 // Create an Express application
 const app = express();
-const connectDB = require("./config/database");
+const connectDB = require("./src/config/database");
 const cookieParser = require("cookie-parser");
-const authRouter = require("./routes/authRoutes");
-const profileRouter = require("./routes/profileRoutes");
-const requestRouter = require("./routes/requestsRouter");
-const userRouter = require("./routes/userRouter");
+const authRouter = require("./src/routes/authRoutes");
+const profileRouter = require("./src/routes/profileRoutes");
+const requestRouter = require("./src/routes/requestsRouter");
+const userRouter = require("./src/routes/userRouter");
 const cors = require("cors");
 //middlewares
 app.use(
