@@ -10,6 +10,9 @@ const requestRouter = require("../src/routes/requestsRouter");
 const userRouter = require("../src/routes/userRouter");
 const cors = require("cors");
 //middlewares
+app.get("/", (req, res) => {
+  res.send("hello");
+});
 app.use(
   cors({
     origin: "http://localhost:5173",
