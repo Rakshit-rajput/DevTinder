@@ -39,7 +39,7 @@ const start = async () => {
     console.log("Database connected successfully");
 
     // Start the server only after the database is connected
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
   } catch (error) {
