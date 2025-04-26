@@ -8,7 +8,10 @@ const authRouter = require("./src/routes/authRoutes");
 const profileRouter = require("./src/routes/profileRoutes");
 const requestRouter = require("./src/routes/requestsRouter");
 const userRouter = require("./src/routes/userRouter");
+const chatRouter = require("./src/routes/chatRoutes");
 const cors = require("cors");
+const http = require("http");
+const initializeSocket = require("./src/utils/socket");
 //middlewares
 app.get("/", (req, res) => {
   res.send("hello");
@@ -22,15 +25,19 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 // Define a port
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 //auth Routes
 app.use("/auth", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
+app.use("/", chatRouter);
 
 // Start the server
+const server = http.createServer(app);
+
+initializeSocket(server);
 
 const start = async () => {
   try {
@@ -39,7 +46,7 @@ const start = async () => {
     console.log("Database connected successfully");
 
     // Start the server only after the database is connected
-    app.listen(PORT, "0.0.0.0", () => {
+    server.listen(PORT, "0.0.0.0", () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
   } catch (error) {
