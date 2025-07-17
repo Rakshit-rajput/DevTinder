@@ -12,6 +12,7 @@ const chatRouter = require("./src/routes/chatRoutes");
 const cors = require("cors");
 const http = require("http");
 const initializeSocket = require("./src/utils/socket");
+const getProfileRouter = require("./src/routes/getProfilesRoutes");
 //middlewares
 app.get("/", (req, res) => {
   res.send("hello");
@@ -33,6 +34,7 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 app.use("/", chatRouter);
+app.use("/getuserprofile", getProfileRouter);
 
 // Start the server
 const server = http.createServer(app);

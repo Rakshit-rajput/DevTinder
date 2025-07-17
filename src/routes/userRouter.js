@@ -4,7 +4,16 @@ const User = require("../models/user");
 const ConnectionRequestModel = require("../models/connectionRequest");
 const userAuth = require("../middlewares/auth");
 
-const USER_SAFE_DATA = "firstName lastName photoUrl age gender about skills";
+const USER_SAFE_DATA = [
+  "firstName",
+  "lastName",
+  "image",
+  "age",
+  "gender",
+  "about",
+  "image",
+  "skills",
+].join(" ");
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   //get all the pending requests for user
   try {
@@ -33,8 +42,9 @@ userRouter.get("/user/requests/connections", userAuth, async (req, res) => {
         { fromUserId: userId, status: "accepted" },
       ],
     })
-      .populate("fromUserId", USER_SAFE_DATA)
-      .populate("toUserId", USER_SAFE_DATA);
+      .populate("fromUserId")
+      .populate("toUserId")
+      .lean();
 
     const data = connections.map((row) => {
       if (row.fromUserId._id.toString() === userId.toString()) {
@@ -74,7 +84,8 @@ userRouter.get("/feed", userAuth, async (req, res) => {
         { _id: { $ne: loggedInUser._id } },
       ],
     })
-      .select(USER_SAFE_DATA)
+      .select("-password -__v")
+      .lean() // Add this to get plain JavaScript objects
       .skip(skip)
       .limit(limit);
 
